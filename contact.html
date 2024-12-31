@@ -25,6 +25,8 @@
         
         <!-- Favicon Icon -->
         <link rel="icon" type="image/png" href="images/favicon.png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
         <!-- Favicon Icon -->
     </head>
     <body>
@@ -207,29 +209,30 @@
                     </div>
                     <div class="col-lg-8 col-md-7">
                         <div class="quotationForm bg_button_2">
-                            <form method="post" action="#" id="contact_form">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <input class="required" type="text" name="con_name" placeholder="Full Name">
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input class="required" type="email" name="con_email" placeholder="Email Address">
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input type="text" name="con_phone" placeholder="Phone Number">
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input type="text" name="con_company" placeholder="Company">
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <textarea class="required" name="con_message" placeholder="I need a website for my company"></textarea>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <button type="submit">Send Message<i class="noun-noun_Arrow_1896673"></i></button>
-                                        <div class="con_message alert"></div>
-                                    </div>
-                                </div>
-                            </form>
+                        <form method="post" action="#" id="contact_form">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <input class="required" id="con_name" type="text" name="con_name" placeholder="Full Name">
+                            </div>
+                            <div class="col-lg-6">
+                                <input class="required" id="con_email" type="email" name="con_email" placeholder="Email Address">
+                            </div>
+                            <div class="col-lg-6">
+                                <input id="con_phone" type="text" name="con_phone" placeholder="Phone Number">
+                            </div>
+                            <div class="col-lg-6">
+                                <input id="con_company" type="text" name="con_company" placeholder="Company">
+                            </div>
+                            <div class="col-lg-12">
+                                <textarea class="required" id="con_message" name="con_message" placeholder="I need a website for my company"></textarea>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" id="submit_contact">Send Message<i class="noun-noun_Arrow_1896673"></i></button>
+                                <div class="con_message alert" id="contact_response"></div>
+                            </div>
+                        </div>
+                    </form>
+                    
                         </div>
                     </div>
                 </div>
@@ -353,6 +356,63 @@
         <script src="js/extensions/revolution.extension.video.min.js"></script>
 
         <script src="js/theme.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
         <!-- Include All JS -->
+
+        <script>
+        $(document).ready(function () {
+            $('#contact_form').on('submit', function (e) {
+                e.preventDefault();
+        
+                var name = $('#con_name').val();
+                var email = $('#con_email').val();
+                var phone = $('#con_phone').val();
+                var company = $('#con_company').val();
+                var message = $('#con_message').val();
+        
+                $.ajax({
+                    url: 'https://script.google.com/macros/s/AKfycbz1EyO6w3I46D5G0pjJNKFI79YZBCmQdKaN1g8iJDT1ZutO6cnGNt-7zZTjyDFrUnVA/exec',
+                    method: 'POST',
+                    data: {
+                        con_name: name,
+                        con_email: email,
+                        con_phone: phone,
+                        con_company: company,
+                        con_message: message
+                    },
+                    success: function (response) {
+                        toastr.success('Form submitted successfully!');
+                        setTimeout(function () {
+                            window.location.href = 'http://127.0.0.1:5500/contact.html';
+                        }, 3000);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", xhr.responseText);
+                        toastr.error('There was an error submitting the form. Please try again.');
+                    }
+                });
+            });
+        });
+        
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-full-width",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        </script>
+
     </body>
 </html>
